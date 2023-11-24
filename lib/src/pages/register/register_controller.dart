@@ -1,9 +1,9 @@
+import 'package:delivery_app/src/models/users.dart';
+import 'package:delivery_app/src/providers/users_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '';
 
-class RegisterController extends GetxController{
-
+class RegisterController extends GetxController {
   TextEditingController emailController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController lastnameController = TextEditingController();
@@ -11,7 +11,10 @@ class RegisterController extends GetxController{
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
-  void register(){
+  UserProvider userProvider = UserProvider();
+  
+  void register() async {
+    // Extracción de la entrada del usuario desde los controladores
     String email = emailController.text.trim();
     String password = confirmPasswordController.text;
     String confirmPassword = passwordController.text.trim();
@@ -19,13 +22,33 @@ class RegisterController extends GetxController{
     String lastname = lastnameController.text;
     String phone = phoneController.text;
 
+    // Impresión del correo electrónico y la contraseña con fines de depuración
     print('Email ${email}');
     print('Password ${password}');
 
-    if(isValidForm(email, name, lastname, phone, password, confirmPassword)){
-      Get.snackbar('Formulario valido', 'Estas listo para enviar la peticion http');
+    // Comprobación de si los datos del formulario son válidos
+    if (isValidForm(email, name, lastname, phone, password, confirmPassword)) {
+      // Creación de un objeto User con los datos extraídos
+      User user = User(
+        email: email,
+        name: name,
+        lastname: lastname,
+        phone: phone,
+        password: password,
+      );
+
+      // Envío de una solicitud de registro de usuario usando userProvider
+      Response response = await userProvider.create(user);
+      print('RESPONSE: ${response.body}');
+
+      // Mostrar un Snackbar si el formulario es válido
+      Get.snackbar(
+        'Formulario válido',
+        'Estás listo para enviar la petición http',
+      );
     }
   }
+
   bool isValidForm(
     String email,
     String name,
@@ -33,29 +56,29 @@ class RegisterController extends GetxController{
     String phone,
     String password,
     String confirmPassword,
-  ){
-    if(email.isEmpty){
+  ) {
+    if (email.isEmpty) {
       Get.snackbar('Formulario No Valido', 'Debes de ingresar un email');
     }
-    if(!GetUtils.isEmail(email)){
+    if (!GetUtils.isEmail(email)) {
       Get.snackbar('Formulario No Valido', 'El email no es valido');
     }
 
-    if(name.isEmpty){
+    if (name.isEmpty) {
       Get.snackbar('Formulario No Valido', 'Debes de ingresar tu nombre');
     }
 
-     if(lastname.isEmpty){
+    if (lastname.isEmpty) {
       Get.snackbar('Formulario No Valido', 'Debes de ingresar tu apellido');
     }
-     if(phone.isEmpty){
+    if (phone.isEmpty) {
       Get.snackbar('Formulario No Valido', 'Debes de ingresar tu telefono');
     }
-    if(password.isEmpty){
+    if (password.isEmpty) {
       Get.snackbar('Formulario No Valido', 'Debes de ingresar el password');
     }
 
-    if(password != confirmPassword){
+    if (password != confirmPassword) {
       Get.snackbar('Formulario No Valido', 'Los password no coinciden');
     }
 

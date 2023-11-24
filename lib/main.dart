@@ -1,13 +1,18 @@
 // Importaciones de paquetes y archivos necesarios
+import 'package:delivery_app/src/models/users.dart';
+import 'package:delivery_app/src/pages/home/home_page.dart';
 import 'package:delivery_app/src/pages/login/login_page.dart';
 import 'package:delivery_app/src/pages/register/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:get_storage/get_storage.dart';
 
+User userSession = User.fromJson(GetStorage().read('user')??{});
 // Punto de entrada de la aplicación
-void main() {
+void main() async{
+  await GetStorage.init();
   // Ejecuta la aplicación Flutter
   runApp(const MyApp());
 }
@@ -34,16 +39,19 @@ class _MyAppState extends State<MyApp> {
   // Método que construye la interfaz de usuario de la aplicación
   @override
   Widget build(BuildContext context) {
+    print('Usuario id: ${userSession.email}');
     // Utiliza GetMaterialApp de GetX para gestionar la navegación y rutas
     return GetMaterialApp(
       // Título de la aplicación
       title: 'Delivery App',
+      debugShowCheckedModeBanner: false,
       // Ruta inicial de la aplicación
-      initialRoute: '/',
+      initialRoute: userSession.id != null ? '/home':'/',
       // Configuración de las páginas y rutas
       getPages: [
         GetPage(name: '/', page: () => LoginPage()), 
-        GetPage(name: '/register', page: () => RegisterPage())
+        GetPage(name: '/register', page: () => RegisterPage()),
+        GetPage(name: '/home', page: () => HomePage())
       ],
 
       theme: ThemeData(
