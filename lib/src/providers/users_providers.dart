@@ -11,33 +11,33 @@ class UserProvider extends GetConnect {
     Response response = await post(
       // '$url/create',
       '${Environment.API_URL}/api/users/create',
-      user.toJson(),  // Convierte el objeto User a formato JSON
+      user.toJson(), // Convierte el objeto User a formato JSON
       headers: {
-        'Content-Type': 'application/json',  // Establece el tipo de contenido como JSON
+        'Content-Type':
+            'application/json', // Establece el tipo de contenido como JSON
       },
     );
     // Espera hasta que el servidor responda y luego retorna la respuesta
     return response;
   }
 
-  Future<ResponseApi> login(String email, String password)async{
+  Future<ResponseApi> login(String email, String password) async {
     Response response = await post(
-        '$url/login',
+        // '$url/login',
+        '${Environment.API_URL}/api/users/login',
         {
           'email': email,
           'password': password
         },
         headers: {
-          'Content-Type':'application/json'
-        }
-      
-      );//ESPERAR HASTA QUE EL SERVIDOR NOS RETONE LA RESPUESTA 
+          'Content-Type': 'application/json'
+        }); //ESPERAR HASTA QUE EL SERVIDOR NOS RETONE LA RESPUESTA
 
-      if(response.body==null){
-        Get.snackbar('Error', 'No se pudo ejecutar la peticion');
-        return ResponseApi();
-      } 
-      ResponseApi responseApi = ResponseApi.fromJson(response.body);
-      return responseApi;
+    if (response.body == null) {
+      Get.snackbar('Error', 'No se pudo ejecutar la peticion');
+      return ResponseApi();
+    }
+    ResponseApi responseApi = ResponseApi.fromJson(response.body);
+    return responseApi;
   }
 }

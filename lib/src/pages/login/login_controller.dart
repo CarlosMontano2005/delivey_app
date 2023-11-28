@@ -1,11 +1,14 @@
 // import 'package:flutter/material.dart';
 import 'package:delivery_app/src/models/response_api.dart';
+import 'package:delivery_app/src/models/users.dart';
 import 'package:delivery_app/src/providers/users_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 class LoginController extends GetxController {
+  User user = User.fromJson(GetStorage().read('user')??{});
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -26,6 +29,7 @@ class LoginController extends GetxController {
       // Get.snackbar('Formulario valio', 'Estas listo para enviar la peticion http');
       ResponseApi responseApi = await userProvider.login(email, password);
 
+      print('Response Api: ${responseApi.toJson()}');
 
       if(responseApi.success == true){
         
